@@ -1,0 +1,2 @@
+class JsonxParsingException(Exception):
+    pass
