@@ -36,7 +36,7 @@ def array(root: Element, key: Optional[str], val: list) -> Element:
 
     # Convert all list value sub-types
     for v in val:
-        converter = __get_translator(__get_type(v))
+        converter = __get_converter(__get_type(v))
         converter(sub_root, None, v)
     return root
 
@@ -51,7 +51,7 @@ def dictionary(root: Element, key: Optional[str], val: dict) -> Element:
 
     # Convert all dict key/value sub-types
     for k, v in val.items():
-        converter = __get_translator(__get_type(v))
+        converter = __get_converter(__get_type(v))
         converter(sub_root, k, v)
     return root
 
@@ -104,7 +104,7 @@ def number(root: Element, key: Optional[str], val: Union[int, float]) -> Element
 
 
 def null(root: Element, key: Optional[str], val: None) -> Element:
-    """Convert a None value."""
+    """Convert a null value."""
     e = SubElement(root, "json:null")
 
     # A "name" attribute is optional
@@ -125,7 +125,7 @@ def finalize(root: Element) -> str:
     return f.getvalue().decode("utf-8")
 
 
-TRANSLATIONS: dict[str, Callable] = {
+CONVERTERS: dict[str, Callable] = {
     "list": array,
     "dict": dictionary,
     "bool": boolean,
@@ -136,15 +136,15 @@ TRANSLATIONS: dict[str, Callable] = {
 }
 
 
-def __get_translator(type: str) -> Callable:
-    """Get the proper translator for this data type."""
-    if type not in TRANSLATIONS:
-        raise JsonxParsingException(f"Type '{type}' cannot be handled.")
-    return TRANSLATIONS[type]
+def __get_converter(type: str) -> Callable:
+    """Get the proper converter for this data type."""
+    if type not in CONVERTERS:
+        raise JsonxParsingException(f"Type `{type}` cannot be handled.")
+    return CONVERTERS[type]
 
 
 def convert(data: Union[dict, list]) -> str:
-
+    """Convert JSON data to JSONx data."""
     # Only list and dict root elements are supported
     root_data_type = type(data)
 
@@ -161,13 +161,13 @@ def convert(data: Union[dict, list]) -> str:
     # The root element is a dict
     if root_data_type == dict:
         for k, v in data.items():  # type: ignore
-            converter = __get_translator(__get_type(v))
+            converter = __get_converter(__get_type(v))
             converter(root_element, k, v)
 
     # The root element is a list
     else:
         for v in data:
-            converter = __get_translator(__get_type(v))
+            converter = __get_converter(__get_type(v))
             converter(root_element, None, v)
 
     # Complete the XML generation
