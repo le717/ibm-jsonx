@@ -1,6 +1,6 @@
 # ibm_jsonx
 
-> Convert JSON to IBM's JSONx format.
+> Convert data between JSON to IBM's JSONx format.
 
 ## Rationale
 
@@ -41,6 +41,9 @@ ibm_jsonx.to_jsonx(json_data)
 
 # Also supports loading from a PathLike object or string file path
 ibm_jsonx.file_to_jsonx(pathlib.Path("json-data.json"))
+
+# Also works the other direction
+ibm_jsonx.from_jsonx_file("jsonx-data.xml")  # type: str
 ```
 
 ## Building
