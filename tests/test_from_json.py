@@ -4,8 +4,9 @@ import ibm_jsonx
 
 
 class TestFromJson(unittest.TestCase):
-    def setUp(self):
-        self.data = ibm_jsonx.file_to_jsonx("tests/test.json")
+    @classmethod
+    def setUpClass(cls):
+        cls.data = ibm_jsonx.file_to_jsonx("tests/test.json")
 
     def test_root_element_is_object(self):
         self.assertTrue(
@@ -13,7 +14,6 @@ class TestFromJson(unittest.TestCase):
         )
 
     def test_string_with_name_name(self):
-        print(self.data)
         self.assertIn('<json:string name="name"', self.data)
 
     def test_string_special_with_name_ficoScore(self):
@@ -22,6 +22,9 @@ class TestFromJson(unittest.TestCase):
     @unittest.skip("missing impl")
     def test_string_special_value_with_name_ficoScore(self):
         self.assertIn('<json:string name="ficoScore"> > 640</json:string>', self.data)
+
+    def test_string_special_ampersand_is_entity(self):
+        self.assertIn('<json:string name="&amp;">&amp;</json:string>', self.data)
 
     def test_dict_with_name_address(self):
         self.assertIn('<json:object name="address"', self.data)

@@ -13,5 +13,10 @@
   "additionalInfo": null,
   "remote": false,
   "height": 62.4,
-  "ficoScore": " > 640"
+  "ficoScore": " > 640",
+  "&": "&",
+  "<": "<",
+  ">": ">",
+  "\u005c": "\u005c",
+  "\u0062": "\u0062"
 }
