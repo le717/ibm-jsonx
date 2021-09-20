@@ -8,11 +8,6 @@ from ibm_jsonx.exceptions import JsonxParsingException
 __all__ = ["convert"]
 
 
-def __get_type(text: str) -> str:
-    """Get a text data type label from a `type()` eval."""
-    return str(type(text)).lstrip("<class ").rstrip(">").replace("'", "")
-
-
 def root(root_type: Union[Type[list], Type[dict]]) -> Element:
     """Create the root XML element."""
     root_tag = "object" if root_type == dict else "array"
@@ -36,7 +31,7 @@ def array(root: Element, key: Optional[str], val: list) -> Element:
 
     # Convert all list value sub-types
     for v in val:
-        converter = __get_converter(__get_type(v))
+        converter = __get_converter(v)
         converter(sub_root, None, v)
     return root
 
@@ -51,7 +46,7 @@ def dictionary(root: Element, key: Optional[str], val: dict) -> Element:
 
     # Convert all dict key/value sub-types
     for k, v in val.items():
-        converter = __get_converter(__get_type(v))
+        converter = __get_converter(v)
         converter(sub_root, k, v)
     return root
 
@@ -136,11 +131,12 @@ CONVERTERS: dict[str, Callable] = {
 }
 
 
-def __get_converter(type: str) -> Callable:
+def __get_converter(text: str) -> Callable:
     """Get the proper converter for this data type."""
-    if type not in CONVERTERS:
-        raise JsonxParsingException(f"Type `{type}` cannot be handled.")
-    return CONVERTERS[type]
+    text_type = str(type(text)).lstrip("<class ").rstrip(">").replace("'", "")
+    if text_type not in CONVERTERS:
+        raise JsonxParsingException(f"Type `{text_type}` cannot be handled.")
+    return CONVERTERS[text_type]
 
 
 def convert(data: Union[dict, list]) -> str:
@@ -161,13 +157,13 @@ def convert(data: Union[dict, list]) -> str:
     # The root element is a dict
     if root_data_type == dict:
         for k, v in data.items():  # type: ignore
-            converter = __get_converter(__get_type(v))
+            converter = __get_converter(v)
             converter(root_element, k, v)
 
     # The root element is a list
     else:
         for v in data:
-            converter = __get_converter(__get_type(v))
+            converter = __get_converter(v)
             converter(root_element, None, v)
 
     # Complete the XML generation
