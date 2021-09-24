@@ -1,3 +1,4 @@
+from pathlib import Path
 import unittest
 
 import ibm_jsonx
@@ -6,7 +7,7 @@ import ibm_jsonx
 class TestFromJson(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = ibm_jsonx.file_to_jsonx("tests/test.json")
+        cls.data = ibm_jsonx.to_jsonx(Path("tests/test.json"))
 
     def test_root_element_is_object(self):
         self.assertTrue(

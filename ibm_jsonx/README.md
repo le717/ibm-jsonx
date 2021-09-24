@@ -39,11 +39,11 @@ json_data = """{
 # Load stringified JSON data
 ibm_jsonx.to_jsonx(json_data)
 
-# Also supports loading from a PathLike object or string file path
-ibm_jsonx.file_to_jsonx(pathlib.Path("json-data.json"))
+# Also supports loading from/to a PathLike object
+ibm_jsonx.to_jsonx(pathlib.Path("json-data.json"), pathlib.Path("jsonx-data.xml"))
 
 # Also works the other direction
-ibm_jsonx.from_jsonx_file("jsonx-data.xml")  # type: str
+ibm_jsonx.from_jsonx(pathlib.Path("jsonx-data.xml"))  # type: str
 ```
 
 ## Building

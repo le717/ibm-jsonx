@@ -5,30 +5,37 @@ from typing import Union
 from ibm_jsonx import from_json, to_json
 
 
-__all__ = ["from_jsonx", "to_jsonx", "file_from_jsonx", "file_to_jsonx"]
+__all__ = ["from_jsonx", "to_jsonx"]
 
 
-def from_jsonx(data: str) -> str:
+def from_jsonx(data: Union[str, Path], outfile: Path = None) -> str:
     """Convert JSONx to stringified JSON."""
-    return json.dumps(to_json.convert(data))
+    # If we got a PathLike instance as the input, get the text from it
+    if isinstance(data, Path):
+        data = data.read_text()
+
+    # Convert the data
+    json_data = json.dumps(to_json.convert(data))
+
+    # We were asked to output it to a file, so do that
+    if outfile:
+        outfile.write_text(json_data)
+
+    # Always return the data regardless
+    return json_data
 
 
-def to_jsonx(data: str) -> str:
+def to_jsonx(data: Union[str, Path], outfile: Path = None) -> str:
     """Convert stringified JSON to JSONx."""
-    return from_json.convert(json.loads(data))
+    # If we got a PathLike instance as the input, get the text from it
+    if isinstance(data, Path):
+        data = data.read_text()
 
+    jsonx_data = from_json.convert(json.loads(data))
 
-def file_to_jsonx(file_name: Union[str, Path]) -> str:
-    """Convert a JSON file to JSONx data."""
-    # Handle a non-PathLike argument
-    if not isinstance(file_name, Path):
-        file_name = Path(file_name).resolve()
-    return to_jsonx(file_name.read_text())
+    # We were asked to output it to a file, so do that
+    if outfile:
+        outfile.write_text(jsonx_data)
 
-
-def file_from_jsonx(file_name: Union[str, Path]) -> str:
-    """Convert a JSONx file to stringified JSON data."""
-    # Handle a non-PathLike argument
-    if not isinstance(file_name, Path):
-        file_name = Path(file_name).resolve()
-    return from_jsonx(file_name.read_text())
+    # Always return the data regardless
+    return jsonx_data
