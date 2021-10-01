@@ -1,6 +1,7 @@
 from io import BytesIO
 from typing import Callable, Optional, Type, Union
 from xml.etree.ElementTree import Element, ElementTree, SubElement
+from warnings import warn
 
 from ibm_jsonx.exceptions import JsonxParsingException
 
@@ -65,11 +66,7 @@ def boolean(root: Element, key: Optional[str], val: bool) -> Element:
 
 def special(val: str) -> str:
     """Convert special string values."""
-    # TODO impl this
-    # r"[\b\f]*"
-    # print(val)
-    # print(val.isprintable())
-    # print(f"{val.encode()=}")
+    warn("Special character encoding is not available.", RuntimeWarning)
     return val
 
 
@@ -81,7 +78,6 @@ def string(root: Element, key: Optional[str], val: str) -> Element:
     if key is not None:
         e.attrib = {"name": special(key)}
 
-    # TODO Call special()
     e.text = val
     return root
 

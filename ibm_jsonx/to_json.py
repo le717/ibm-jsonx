@@ -2,6 +2,7 @@ from enum import Enum
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, ParseError
 from typing import Callable, NoReturn, Union
+from warnings import warn
 
 from ibm_jsonx.exceptions import JsonxParsingException
 
@@ -45,12 +46,13 @@ def boolean(val: Element) -> bool:
 
 def string(ele: Element) -> str:
     """Convert to a string value."""
-    # TODO Reconvert special characters
-    return ele.text if ele.text else ""
+    return special(ele.text) if ele.text else ""
 
 
-def special():
-    raise NotImplementedError
+def special(text: str) -> str:
+    """Convert special string values."""
+    warn("Special character encoding is not available.", RuntimeWarning)
+    return text
 
 
 def number(ele: Element) -> Union[float, int]:
