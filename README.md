@@ -12,6 +12,16 @@ Because I could.
 
 Don't.
 
+Note that special and escaped characters conversion is unsupported.
+If you have data with characters than are classifed as such,
+this will provide invalid JSON/JSONx. If you do not, then all output
+should _in theory_ be valid.
+
+Also, this library is affected by well-known and documented
+[XML vulnerabilities](https://docs.python.org/3/library/xml.html#xml-vulnerabilities).
+So, please, don't use it. Ever. It's a toy library.
+Use JSON or XML, whichever you fancy, but not both mixed together.
+
 ```python
 import pathlib
 

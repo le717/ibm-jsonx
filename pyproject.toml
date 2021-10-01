@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ibm_jsonx"
-version = "0.1.0"
-description = ""
+version = "1.0.0"
+description = "Convert data between JSON to IBM's JSONx format."
 authors = ["Caleb <le717@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
